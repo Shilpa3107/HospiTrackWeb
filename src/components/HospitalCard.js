@@ -38,6 +38,7 @@ const HospitalCard = ({ hospital }) => {
   const navigate = useNavigate()
 
   const handleBookBed = () => {
+    setView("bookBed");
     setOpenDialog(true);
   }
   

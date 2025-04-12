@@ -178,4 +178,25 @@ export const HospitalService = {
   deg2rad(deg) {
     return deg * (Math.PI / 180);
   },
+
+  // Get nearby hospitals based on user location
+  async getNearbyHospitals(userLocation) {
+    try {
+      const hospitals = await this.getHospitals();
+      return hospitals.map(hospital => {
+        const distance = this.calculateDistance(
+          userLocation.latitude,
+          userLocation.longitude,
+          hospital.location.latitude,
+          hospital.location.longitude
+        );
+        return {
+          ...hospital,
+          distance
+        };
+      });
+    } catch (error) {
+      throw error;
+    }
+  }
 };

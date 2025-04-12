@@ -25,24 +25,48 @@ const RoutingMachine = ({ userLocation, hospitalLocation, transportType }) => {
   useEffect(() => {
     if (!userLocation || !hospitalLocation) return
 
-    const routingControl = L.Routing.control({
-      waypoints: [
-        L.latLng(userLocation.latitude, userLocation.longitude),
-        L.latLng(hospitalLocation.latitude, hospitalLocation.longitude),
-      ],
-      routeWhileDragging: false,
-      showAlternatives: true,
-      lineOptions: {
-        styles: [{ color: "#6FA1EC", weight: 4 }],
-      },
-      router: L.Routing.osrmv1({
-        serviceUrl: "https://router.project-osrm.org/route/v1",
-        profile: getProfile(transportType),
-      }),
-    }).addTo(map)
+    let routingControl = null
+
+    try {
+      routingControl = L.Routing.control({
+        waypoints: [
+          L.latLng(userLocation.latitude, userLocation.longitude),
+          L.latLng(hospitalLocation.latitude, hospitalLocation.longitude),
+        ],
+        routeWhileDragging: false,
+        showAlternatives: true,
+        lineOptions: {
+          styles: [{ color: "#6FA1EC", weight: 4 }],
+        },
+        router: L.Routing.osrmv1({
+          serviceUrl: "https://router.project-osrm.org/route/v1",
+          profile: getProfile(transportType),
+        }),
+      }).addTo(map)
+
+      // Store the routing control instance
+      map.routingControl = routingControl
+    } catch (error) {
+      console.error("Error initializing routing control:", error)
+    }
 
     return () => {
-      map.removeControl(routingControl)
+      if (map && map.routingControl) {
+        try {
+          // Remove the routing control from the map
+          map.removeControl(map.routingControl)
+          
+          // Clear any existing routes
+          if (map.routingControl._plan) {
+            map.routingControl._plan.setWaypoints([])
+          }
+          
+          // Remove the routing control instance
+          delete map.routingControl
+        } catch (error) {
+          console.error("Error cleaning up routing control:", error)
+        }
+      }
     }
   }, [map, userLocation, hospitalLocation, transportType])
 

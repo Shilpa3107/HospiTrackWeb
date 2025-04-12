@@ -14,7 +14,7 @@ A mobile-friendly web application that helps users find nearby hospitals with av
 ## Tech Stack
 
 - React for the frontend UI
-- Firebase Firestore for the database
+- Firebase Realtime database for the database
 - Leaflet for maps and navigation
 - React Router for routing
 

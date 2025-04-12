@@ -68,7 +68,9 @@ const HospitalCard = ({ hospital }) => {
             variant="contained"
             color="primary"
             onClick={handleBookBed}
-            disabled={!hospital.hasAnyFreeBeds}
+            disabled={
+               Object.values(hospital.beds).reduce((a, b) => a + b, 0) === 0
+             }
             startIcon={<BedIcon />}
             sx={{ flex: 1, mr: 1 }}
           >

@@ -63,14 +63,9 @@ A mobile-friendly web application that helps users find nearby hospitals with av
 
 ## Deployment
 
-1. Build the application:
+ Build the application:
    \`\`\`
    npm run build
-   \`\`\`
-
-2. Deploy to Firebase Hosting:
-   \`\`\`
-   firebase deploy
    \`\`\`
 
 ## License

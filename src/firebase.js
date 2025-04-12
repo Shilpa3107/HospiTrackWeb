@@ -6,6 +6,7 @@ const firebaseConfig = {
   apiKey: "AIzaSyBFt6_jCvwNivg_lzzu7Ovd_nRE45ZPAu4",
   authDomain: "hospitrack-420b6.firebaseapp.com",
   projectId: "hospitrack-420b6",
+  databaseURL: "https://hospitrack-420b6-default-rtdb.asia-southeast1.firebasedatabase.app", 
   storageBucket: "hospitrack-420b6.firebasestorage.app",
   messagingSenderId: "263633545091",
   appId: "1:263633545091:web:44c8930cb327195ea778b6",

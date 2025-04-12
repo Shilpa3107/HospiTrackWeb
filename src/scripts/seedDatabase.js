@@ -1,6 +1,5 @@
-import { db } from "../firebase"
-import { collection, addDoc } from "firebase/firestore"
-
+import { db } from "../firebase";
+import { getDatabase, ref, set, push } from "firebase/database";
 // Sample hospital data
 const hospitals = [
   {
@@ -108,11 +107,12 @@ const hospitals = [
 // Function to seed the database
 async function seedDatabase() {
   try {
-    const hospitalsCollection = collection(db, "hospitals")
+    const databaseRef = ref(db, "hospitals"); 
 
     for (const hospital of hospitals) {
-      await addDoc(hospitalsCollection, hospital)
-      console.log(`Added hospital: ${hospital.name}`)
+       const newHospitalRef = push(databaseRef);
+      await set(newHospitalRef, hospital);  
+      console.log(`Added hospital: ${hospital.name}`);
     }
 
     console.log("Database seeding completed successfully!")

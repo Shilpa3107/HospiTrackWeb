@@ -5,42 +5,38 @@ import {
   sendPasswordResetEmail,
   updateProfile,
 } from "firebase/auth"
-import { doc, setDoc, getDoc } from "firebase/firestore"
+import { ref, set, get, child } from "firebase/database"; 
 import { auth, db } from "../firebase"
 
 export const AuthService = {
   // Register a new hospital admin
   async registerHospitalAdmin(email, password, hospitalName) {
     try {
-      const userCredential = await createUserWithEmailAndPassword(auth, email, password)
-      const user = userCredential.user
+      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+      const user = userCredential.user;
 
       // Update profile with hospital name
-      await updateProfile(user, {
-        displayName: hospitalName,
-      })
-
-      // Create a hospital admin document
-      await setDoc(doc(db, "hospitalAdmins", user.uid), {
+      const hospitalAdminRef = ref(db, `hospitalAdmins/${user.uid}`); // Reference to hospital admin
+      await set(hospitalAdminRef, {
         email,
         hospitalName,
         role: "admin",
         createdAt: new Date().toISOString(),
-      })
+      });
 
-      return user
+      return user;
     } catch (error) {
-      throw error
+      throw error;
     }
   },
 
   // Sign in
   async signIn(email, password) {
     try {
-      const userCredential = await signInWithEmailAndPassword(auth, email, password)
-      return userCredential.user
+      const userCredential = await signInWithEmailAndPassword(auth, email, password);
+      return userCredential.user;
     } catch (error) {
-      throw error
+      throw error;
     }
   },
 
@@ -72,23 +68,25 @@ export const AuthService = {
   // Check if user is a hospital admin
   async isHospitalAdmin(userId) {
     try {
-      const adminDoc = await getDoc(doc(db, "hospitalAdmins", userId))
-      return adminDoc.exists() && adminDoc.data().role === "admin"
+      const adminRef = ref(db, `hospitalAdmins/${userId}`); // Reference to a specific admin's data
+      const snapshot = await get(adminRef);
+      return snapshot.exists() && snapshot.val().role === "admin"; // Check role
     } catch (error) {
-      return false
+      return false;
     }
   },
 
   // Get hospital admin data
-  async getHospitalAdminData(userId) {
+   async getHospitalAdminData(userId) {
     try {
-      const adminDoc = await getDoc(doc(db, "hospitalAdmins", userId))
-      if (adminDoc.exists()) {
-        return adminDoc.data()
+      const adminRef = ref(db, `hospitalAdmins/${userId}`); // Reference to admin data
+      const snapshot = await get(adminRef);
+      if (snapshot.exists()) {
+        return snapshot.val();
       }
-      return null
+      return null;
     } catch (error) {
-      throw error
+      throw error;
     }
   },
-}
+};

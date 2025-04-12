@@ -7,7 +7,7 @@ import {
   signInWithEmailAndPassword,
   signOut as firebaseSignOut,
 } from "firebase/auth";
-import { doc, setDoc, getDoc } from "firebase/firestore";
+import { ref, set, get } from "firebase/database"; 
 import { auth, db } from "../firebase";
 
 const AuthContext = createContext();
@@ -34,8 +34,12 @@ export function AuthProvider({ children }) {
     }
 
     try {
-      const adminDoc = await getDoc(doc(db, "hospitalAdmins", userId));
-      const isUserAdmin = adminDoc.exists() && adminDoc.data().role === "admin";
+      // Use Realtime DB reference to get the data
+      const adminRef = ref(db, `hospitalAdmins/${userId}`);
+      const adminSnap = await get(adminRef);
+      
+      // Check if the admin data exists and if the role is "admin"
+      const isUserAdmin = adminSnap.exists() && adminSnap.val().role === "admin";
       setIsAdmin(isUserAdmin);
       return isUserAdmin;
     } catch (error) {
@@ -53,12 +57,14 @@ export function AuthProvider({ children }) {
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
       const user = userCredential.user;
 
-      await setDoc(doc(db, "hospitalAdmins", user.uid), {
+      // Use Realtime DB reference to set the admin data
+      await set(ref(db, `hospitalAdmins/${user.uid}`), {
         email,
         hospitalName,
         role: "admin",
         createdAt: new Date().toISOString(),
       });
+
 
       // Verify admin status immediately after registration
       await checkAdminStatus(user.uid);

@@ -1,38 +1,44 @@
-import { collection, getDocs, doc, getDoc, updateDoc, addDoc, query, where, deleteDoc } from "firebase/firestore"
-import { db } from "../firebase"
-import { Hospital } from "../models/hospital"
+import { db } from "../firebase";
+import { ref, get, set, update, push, child, remove } from "firebase/database";
+import { Hospital } from "../models/hospital";
 
 export const HospitalService = {
   // Get all hospitals
   async getHospitals() {
-    const hospitalsCollection = collection(db, "hospitals")
-    const hospitalSnapshot = await getDocs(hospitalsCollection)
-    return hospitalSnapshot.docs.map((doc) => {
-      const data = doc.data()
-      return new Hospital(
-        doc.id,
-        data.name,
-        data.address,
-        data.location,
-        data.beds,
-        data.facilities,
-        data.contact,
-        data.type,
-        data.landmark,
-        data.adminId,
-      )
-    })
+    const hospitalsRef = ref(db, "hospitals");
+    const snapshot = await get(hospitalsRef);
+
+    if (snapshot.exists()) {
+      const hospitalsData = snapshot.val();
+      return Object.keys(hospitalsData).map((id) => {
+        const data = hospitalsData[id];
+        return new Hospital(
+          id,
+          data.name,
+          data.address,
+          data.location,
+          data.beds,
+          data.facilities,
+          data.contact,
+          data.type,
+          data.landmark,
+          data.adminId
+        );
+      });
+    }
+    return [];
   },
+
 
   // Get hospital by ID
   async getHospitalById(id) {
-    const hospitalDoc = doc(db, "hospitals", id)
-    const hospitalSnapshot = await getDoc(hospitalDoc)
+    const hospitalRef = ref(db, `hospitals/${id}`);
+    const snapshot = await get(hospitalRef);
 
-    if (hospitalSnapshot.exists()) {
-      const data = hospitalSnapshot.data()
+    if (snapshot.exists()) {
+      const data = snapshot.val();
       return new Hospital(
-        hospitalSnapshot.id,
+        id,
         data.name,
         data.address,
         data.location,
@@ -41,133 +47,135 @@ export const HospitalService = {
         data.contact,
         data.type,
         data.landmark,
-        data.adminId,
-      )
+        data.adminId
+      );
     }
-    return null
+    return null;
   },
 
   // Get hospital by admin ID
   async getHospitalByAdminId(adminId) {
-    const hospitalsCollection = collection(db, "hospitals")
-    const q = query(hospitalsCollection, where("adminId", "==", adminId))
-    const hospitalSnapshot = await getDocs(q)
+    const hospitalsRef = ref(db, "hospitals");
+    const snapshot = await get(hospitalsRef);
 
-    if (!hospitalSnapshot.empty) {
-      const doc = hospitalSnapshot.docs[0]
-      const data = doc.data()
-      return new Hospital(
-        doc.id,
-        data.name,
-        data.address,
-        data.location,
-        data.beds,
-        data.facilities,
-        data.contact,
-        data.type,
-        data.landmark,
-        data.adminId,
-      )
+    if (snapshot.exists()) {
+      const hospitalsData = snapshot.val();
+      for (const id in hospitalsData) {
+        const data = hospitalsData[id];
+        if (data.adminId === adminId) {
+          return new Hospital(
+            id,
+            data.name,
+            data.address,
+            data.location,
+            data.beds,
+            data.facilities,
+            data.contact,
+            data.type,
+            data.landmark,
+            data.adminId
+          );
+        }
+      }
     }
-    return null
+    return null;
   },
-
   // Add a new hospital
   async addHospital(hospitalData, adminId) {
     try {
-      const hospitalsCollection = collection(db, "hospitals")
-      const docRef = await addDoc(hospitalsCollection, {
+      const hospitalsRef = ref(db, "hospitals");
+      const newHospitalRef = push(hospitalsRef);
+      await set(newHospitalRef, {
         ...hospitalData,
         adminId,
         createdAt: new Date().toISOString(),
-      })
-      return docRef.id
+      });
+      return newHospitalRef.key;
     } catch (error) {
-      throw error
+      throw error;
     }
   },
 
   // Update hospital details
   async updateHospital(hospitalId, hospitalData) {
     try {
-      const hospitalDoc = doc(db, "hospitals", hospitalId)
-      await updateDoc(hospitalDoc, {
+      const hospitalRef = ref(db, `hospitals/${hospitalId}`);
+      await update(hospitalRef, {
         ...hospitalData,
         updatedAt: new Date().toISOString(),
-      })
-      return true
+      });
+      return true;
     } catch (error) {
-      throw error
+      throw error;
     }
   },
 
   // Update bed availability
   async updateBedAvailability(hospitalId, beds) {
     try {
-      const hospitalDoc = doc(db, "hospitals", hospitalId)
-      await updateDoc(hospitalDoc, {
+      const hospitalRef = ref(db, `hospitals/${hospitalId}`);
+      await update(hospitalRef, {
         beds,
         updatedAt: new Date().toISOString(),
-      })
-      return true
+      });
+      return true;
     } catch (error) {
-      throw error
+      throw error;
     }
   },
-
   // Book a bed
   async bookBed(hospitalId, bedType) {
     try {
-      const hospitalDoc = doc(db, "hospitals", hospitalId)
-      const hospitalSnapshot = await getDoc(hospitalDoc)
+      const hospitalRef = ref(db, `hospitals/${hospitalId}`);
+      const snapshot = await get(hospitalRef);
 
-      if (hospitalSnapshot.exists()) {
-        const data = hospitalSnapshot.data()
+      if (snapshot.exists()) {
+        const data = snapshot.val();
 
         if (data.beds[bedType] > 0) {
           // Decrease bed count
-          const updatedBeds = { ...data.beds }
-          updatedBeds[bedType] = updatedBeds[bedType] - 1
+          const updatedBeds = { ...data.beds };
+          updatedBeds[bedType] = updatedBeds[bedType] - 1;
 
-          await updateDoc(hospitalDoc, {
+          await update(hospitalRef, {
             beds: updatedBeds,
             updatedAt: new Date().toISOString(),
-          })
+          });
 
-          return true
+          return true;
         }
       }
-      return false
+      return false;
     } catch (error) {
-      throw error
+      throw error;
     }
   },
 
   // Delete a hospital
   async deleteHospital(hospitalId) {
     try {
-      const hospitalDoc = doc(db, "hospitals", hospitalId)
-      await deleteDoc(hospitalDoc)
-      return true
+      const hospitalRef = ref(db, `hospitals/${hospitalId}`);
+      await remove(hospitalRef);
+      return true;
     } catch (error) {
-      throw error
+      throw error;
     }
   },
 
   // Calculate distance between two coordinates (in km)
   calculateDistance(lat1, lon1, lat2, lon2) {
-    const R = 6371 // Radius of the earth in km
-    const dLat = this.deg2rad(lat2 - lat1)
-    const dLon = this.deg2rad(lon2 - lon1)
+    const R = 6371; // Radius of the earth in km
+    const dLat = this.deg2rad(lat2 - lat1);
+    const dLon = this.deg2rad(lon2 - lon1);
     const a =
       Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-      Math.cos(this.deg2rad(lat1)) * Math.cos(this.deg2rad(lat2)) * Math.sin(dLon / 2) * Math.sin(dLon / 2)
-    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a))
-    const d = R * c // Distance in km
-    return d
+      Math.cos(this.deg2rad(lat1)) * Math.cos(this.deg2rad(lat2)) * Math.sin(dLon / 2) * Math.sin(dLon / 2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    const d = R * c; // Distance in km
+    return d;
   },
 
   deg2rad(deg) {
-    return deg * (Math.PI / 180)
+    return deg * (Math.PI / 180);
   },
-}
+};

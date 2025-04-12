@@ -31,7 +31,7 @@ A mobile-friendly web application that helps users find nearby hospitals with av
 1. Clone the repository:
    \`\`\`
    git clone https://github.com/Shilpa3107/HospiTrackWeb.git
-   cd hospitrack
+   cd HospiTrackWeb
    \`\`\`
 
 2. Install dependencies:
@@ -60,13 +60,6 @@ A mobile-friendly web application that helps users find nearby hospitals with av
 2. Grant location access when prompted
 3. Browse nearby hospitals with available beds
 4. Book a bed or navigate to a hospital
-
-## Deployment
-
- Build the application:
-   \`\`\`
-   npm run build
-   \`\`\`
 
 ## License
 

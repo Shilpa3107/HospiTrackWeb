@@ -1,0 +1,193 @@
+.hospital-card {
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  margin-bottom: 16px;
+  overflow: hidden;
+}
+
+.hospital-card-header {
+  background-color: #f5f5f5;
+  padding: 12px 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.hospital-card-header h3 {
+  margin: 0;
+  color: #333;
+  font-size: 18px;
+}
+
+.distance {
+  font-size: 14px;
+  color: #666;
+}
+
+.hospital-card-body {
+  padding: 16px;
+}
+
+.address {
+  margin-top: 0;
+  margin-bottom: 12px;
+  color: #555;
+}
+
+.facilities {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.facility-tag {
+  background-color: #e3f2fd;
+  color: #1976d2;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+}
+
+.bed-availability h4 {
+  margin-top: 0;
+  margin-bottom: 8px;
+  font-size: 16px;
+  color: #333;
+}
+
+.bed-availability ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: 8px;
+}
+
+.bed-availability li {
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+.bed-availability li.available {
+  background-color: #e8f5e9;
+  color: #2e7d32;
+}
+
+.bed-availability li.unavailable {
+  background-color: #ffebee;
+  color: #c62828;
+}
+
+.hospital-card-footer {
+  padding: 16px;
+  border-top: 1px solid #eee;
+}
+
+.hospital-card-actions {
+  display: flex;
+  gap: 12px;
+}
+
+.book-bed-btn,
+.navigate-btn {
+  flex: 1;
+  padding: 10px;
+  border: none;
+  border-radius: 4px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.book-bed-btn {
+  background-color: #1976d2;
+  color: white;
+}
+
+.book-bed-btn:hover {
+  background-color: #1565c0;
+}
+
+.book-bed-btn:disabled {
+  background-color: #bbdefb;
+  cursor: not-allowed;
+}
+
+.navigate-btn {
+  background-color: #43a047;
+  color: white;
+}
+
+.navigate-btn:hover {
+  background-color: #388e3c;
+}
+
+.bed-type-selection,
+.transport-selection {
+  flex-direction: column;
+  width: 100%;
+}
+
+.bed-type-buttons,
+.transport-buttons {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.bed-type-btn,
+.transport-buttons button {
+  padding: 8px;
+  border: none;
+  border-radius: 4px;
+  background-color: #e3f2fd;
+  color: #1976d2;
+  cursor: pointer;
+}
+
+.bed-type-btn:hover,
+.transport-buttons button:hover {
+  background-color: #bbdefb;
+}
+
+.bed-type-btn.disabled {
+  background-color: #f5f5f5;
+  color: #9e9e9e;
+  cursor: not-allowed;
+}
+
+.back-btn {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 4px;
+  background-color: #f5f5f5;
+  color: #333;
+  cursor: pointer;
+  margin-top: 8px;
+}
+
+.back-btn:hover {
+  background-color: #e0e0e0;
+}
+
+.booking-status {
+  margin: 12px 0;
+  padding: 8px;
+  border-radius: 4px;
+  text-align: center;
+}
+
+.booking-status.success {
+  background-color: #e8f5e9;
+  color: #2e7d32;
+}
+
+.booking-status.error {
+  background-color: #ffebee;
+  color: #c62828;
+}

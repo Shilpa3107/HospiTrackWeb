@@ -1,31 +1,32 @@
-// Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
-import { getAnalytics } from "firebase/analytics";
-import { getFirestore } from "firebase/firestore";
-import { db } from './firebase';
-import { getDatabase } from "firebase/database";
 import { getAuth } from "firebase/auth";
-import { getStorage } from "firebase/storage";
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
+import { getFirestore, enableIndexedDbPersistence } from "firebase/firestore";
 
-// Your web app's Firebase configuration
-// For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
-  apiKey: "AIzaSyBGFS82KcU_C8YOW7rPfqB3ileS_fnGV2o",
-  authDomain: "hospitrack-b7f63.firebaseapp.com",
-  databaseURL: "https://hospitrack-b7f63-default-rtdb.asia-southeast1.firebasedatabase.app",
-  projectId: "hospitrack-b7f63",
-  storageBucket: "hospitrack-b7f63.firebasestorage.app",
-  messagingSenderId: "432947553338",
-  appId: "1:432947553338:web:5d7a661e84a3e828dcc103",
-  measurementId: "G-HYW94DQT7Q"
+  apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY || "AIzaSyBUIZO_phqpUVpedhKpm8-p1sZ-Vy4mvOI",
+  authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN || "meditrack-c5f6f.firebaseapp.com",
+  projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID || "meditrack-c5f6f",
+  storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET || "meditrack-c5f6f.appspot.com",
+  messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID || "577305135336",
+  appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID || "1:577305135336:web:ceb2a6782837026f65615d",
 };
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);
-export const db = getFirestore(app);
-export const database = getDatabase(app);
-export const auth = getAuth(app);
-export const storage = getStorage(app);
+
+// Initialize services
+const auth = getAuth(app);
+const db = getFirestore(app);
+
+// Enable offline persistence (optional)
+if (typeof window !== 'undefined') {
+  enableIndexedDbPersistence(db).catch((err) => {
+    if (err.code === 'failed-precondition') {
+      console.warn("Offline persistence can only be enabled in one tab at a time.");
+    } else if (err.code === 'unimplemented') {
+      console.warn("The current browser does not support offline persistence.");
+    }
+  });
+}
+
+export { auth, db };

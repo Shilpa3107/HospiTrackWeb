@@ -1,0 +1,22 @@
+.hospital-list {
+  padding: 16px;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.hospital-list h2 {
+  margin-bottom: 16px;
+  color: #333;
+  text-align: center;
+}
+
+.loading,
+.error {
+  text-align: center;
+  padding: 20px;
+  font-size: 18px;
+}
+
+.error {
+  color: #e53935;
+}

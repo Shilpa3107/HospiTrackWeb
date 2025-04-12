@@ -2,7 +2,9 @@
 
 import { useState } from "react"
 import { HospitalService } from "../services/hospitalService"
+import { useNavigate } from "react-router-dom"
 import "./HospitalCard.css"
+
 
 const HospitalCard = ({ hospital }) => {
   const [view, setView] = useState("default")
@@ -17,6 +19,8 @@ const HospitalCard = ({ hospital }) => {
   const handleNavigate = () => {
     setView("navigate")
   }
+
+  const navigate = useNavigate()
 
   const handleBedTypeSelect = async (bedType) => {
     try {
@@ -36,14 +40,13 @@ const HospitalCard = ({ hospital }) => {
   }
 
   const handleTransportSelect = (transport) => {
-    setSelectedTransport(transport)
-    // Navigate to the map view with the selected transport
-    window.location.href = `/map/${hospital.id}?transport=${transport}`
-  }
+    const distance = hospital.distance.toFixed(2)
+    navigate(`/map/${hospital.id}?transport=${transport}&distance=${distance}`)  }
+  
 
   const renderDefaultView = () => (
     <div className="hospital-card-actions">
-      <button className="book-bed-btn" onClick={handleBookBed} disabled={!hospital.hasAnyFreeBeds()}>
+      <button className="book-bed-btn" onClick={handleBookBed} disabled={!hospital.hasAnyFreeBeds}>
         Book Bed
       </button>
       <button className="navigate-btn" onClick={handleNavigate}>

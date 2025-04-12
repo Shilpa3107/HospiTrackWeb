@@ -17,7 +17,7 @@ const ProtectedRoute = ({ children }) => {
 
   useEffect(() => {
     if (!loading && (!currentUser || !isAdmin)) {
-      navigate("/")
+      navigate("/") // Redirect to home page if not authenticated or not an admin
     }
   }, [currentUser, isAdmin, loading, navigate])
 
@@ -34,13 +34,46 @@ const ProtectedRoute = ({ children }) => {
 
 function AppContent() {
   const [locationPermissionGranted, setLocationPermissionGranted] = useState(false)
+  const [locationInput, setLocationInput] = useState("")
+  const [userLocation, setUserLocation] = useState(null)
   const { currentUser, isAdmin, loading } = useAuth()
 
   const handlePermissionGranted = () => {
     setLocationPermissionGranted(true)
   }
 
-  // Don't show anything until auth state is initialized
+  const handleDetectLocation = () => {
+    if (!navigator.geolocation) {
+      alert("Geolocation is not supported by your browser.")
+      return
+    }
+
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        setUserLocation({
+          latitude: position.coords.latitude,
+          longitude: position.coords.longitude,
+        })
+        setLocationPermissionGranted(true)
+      },
+      (error) => {
+        alert("Failed to detect location.")
+        console.error("Geolocation error:", error)
+      }
+    )
+  }
+
+  const handleLocationInputChange = (e) => {
+    setLocationInput(e.target.value)
+  }
+
+  const handleManualLocationSubmit = () => {
+    if (locationInput.trim() !== "") {
+      setUserLocation({ address: locationInput.trim() })
+      setLocationPermissionGranted(true)
+    }
+  }
+
   if (loading) {
     return <div className="loading-screen">Loading...</div>
   }
@@ -48,7 +81,20 @@ function AppContent() {
   return (
     <div className="app">
       {!locationPermissionGranted && !isAdmin && (
-        <LocationPermission onPermissionGranted={handlePermissionGranted} />
+        <div className="location-selection-container">
+          <h2>Find hospitals near you</h2>
+          <div style={{ display: "flex", gap: "10px", marginTop: "10px" }}>
+            <input
+              type="text"
+              placeholder="Enter your location manually"
+              value={locationInput}
+              onChange={handleLocationInputChange}
+              style={{ padding: "8px", width: "60%" }}
+            />
+            <button onClick={handleManualLocationSubmit}>Search</button>
+            <button onClick={handleDetectLocation}>Detect My Location</button>
+          </div>
+        </div>
       )}
 
       <Routes>
@@ -78,7 +124,6 @@ function AppContent() {
         />
       </Routes>
 
-      {/* Only show admin button if not on admin route */}
       {!window.location.pathname.startsWith("/admin") && <AdminButton />}
     </div>
   )

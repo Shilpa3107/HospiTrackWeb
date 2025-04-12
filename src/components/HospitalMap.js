@@ -62,11 +62,32 @@ const getProfile = (transportType) => {
   }
 }
 
+// Helper function to calculate ETA
+const calculateETA = (distance, transportType) => {
+  let speed = 0
+  switch (transportType) {
+    case "foot":
+      speed = 5
+      break
+    case "bicycle":
+      speed = 60 // average of 50-70
+      break
+    case "car":
+    default:
+      speed = 47
+      break
+  }
+  const timeInHours = distance / speed
+  const minutes = Math.ceil(timeInHours * 60)
+  return minutes
+}
+
+
 const HospitalMap = () => {
   const { hospitalId } = useParams()
   const [searchParams] = useSearchParams()
   const transportType = searchParams.get("transport") || "car"
-
+  const distance = parseFloat(searchParams.get("distance") || "0")
   const [hospital, setHospital] = useState(null)
   const [userLocation, setUserLocation] = useState(null)
   const [loading, setLoading] = useState(true)
@@ -114,11 +135,14 @@ const HospitalMap = () => {
     (userLocation.longitude + hospital.location.longitude) / 2,
   ]
 
+  const eta = distance > 0 ? calculateETA(distance, transportType) : null
+
   return (
     <div className="hospital-map-container">
       <div className="map-header">
         <h2>Navigation to {hospital.name}</h2>
         <p>Transport mode: {transportType.charAt(0).toUpperCase() + transportType.slice(1)}</p>
+        {eta && <p>Estimated time to reach: {eta} minutes</p>}
         <button onClick={() => window.history.back()} className="back-btn">
           Back to List
         </button>

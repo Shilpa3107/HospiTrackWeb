@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState,  useEffect } from "react"
 import { useAuth } from "../../contexts/AuthContext"
 import "./AdminLogin.css"
 
@@ -11,7 +11,8 @@ const AdminRegister = ({ onClose, onLoginClick }) => {
   const [hospitalName, setHospitalName] = useState("")
   const [error, setError] = useState("")
   const [loading, setLoading] = useState(false)
-  const { register } = useAuth()
+
+  const { register, currentUser, isAdmin } = useAuth()
 
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -43,6 +44,13 @@ const AdminRegister = ({ onClose, onLoginClick }) => {
       setLoading(false)
     }
   }
+
+   // Close dialog once admin registration is successful
+   useEffect(() => {
+    if (currentUser && isAdmin) {
+      onClose()
+    }
+  }, [currentUser, isAdmin, onClose])
 
   return (
     <div className="admin-login-container">

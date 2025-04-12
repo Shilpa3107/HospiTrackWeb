@@ -34,7 +34,10 @@ const HospitalList = () => {
         })
 
         // Filter hospitals with at least one free bed
-        const availableHospitals = hospitalsWithDistance.filter((hospital) => hospital.hasAnyFreeBeds())
+        const availableHospitals = hospitalsWithDistance.filter((hospital) => {
+          // Assuming 'beds' is an object with available bed types
+          return Object.values(hospital.beds).some((count) => count > 0)
+        })
 
         // Sort by distance
         const sortedHospitals = availableHospitals.sort((a, b) => a.distance - b.distance)

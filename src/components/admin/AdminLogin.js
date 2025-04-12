@@ -1,7 +1,8 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { useAuth } from "../../contexts/AuthContext"
+import { useNavigate } from "react-router-dom"
 import "./AdminLogin.css"
 
 const AdminLogin = ({ onClose, onRegisterClick }) => {
@@ -9,7 +10,9 @@ const AdminLogin = ({ onClose, onRegisterClick }) => {
   const [password, setPassword] = useState("")
   const [error, setError] = useState("")
   const [loading, setLoading] = useState(false)
-  const { login } = useAuth()
+  const { login , currentUser, isAdmin} = useAuth()
+
+  const navigate = useNavigate()
 
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -23,8 +26,6 @@ const AdminLogin = ({ onClose, onRegisterClick }) => {
     try {
       setLoading(true)
       await login(email, password)
-      // Instead of just closing, we should trigger a page reload or redirect
-      window.location.href = "/admin" // or wherever your admin dashboard is
     } catch (error) {
       setError("Failed to log in. Please check your credentials.")
       console.error(error)
@@ -32,6 +33,12 @@ const AdminLogin = ({ onClose, onRegisterClick }) => {
       setLoading(false)
     }
   }
+
+  useEffect(() => {
+    if (currentUser && isAdmin) {
+      onClose();
+    }
+  }, [currentUser, isAdmin, onClose]);
 
   return (
     <div className="admin-login-container">

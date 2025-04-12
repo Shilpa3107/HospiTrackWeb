@@ -30,7 +30,7 @@ A mobile-friendly web application that helps users find nearby hospitals with av
 
 1. Clone the repository:
    \`\`\`
-   git clone https://github.com/yourusername/hospitrack.git
+   git clone https://github.com/Shilpa3107/HospiTrackWeb.git
    cd hospitrack
    \`\`\`
 

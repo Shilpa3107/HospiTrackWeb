@@ -14,7 +14,7 @@ A mobile-friendly web application that helps users find nearby hospitals with av
 ## Tech Stack
 
 - React for the frontend UI
-- Firebase Firestore for the database
+- Firebase Realtime database for the database
 - Leaflet for maps and navigation
 - React Router for routing
 
@@ -30,8 +30,8 @@ A mobile-friendly web application that helps users find nearby hospitals with av
 
 1. Clone the repository:
    \`\`\`
-   git clone https://github.com/yourusername/hospitrack.git
-   cd hospitrack
+   git clone https://github.com/Shilpa3107/HospiTrackWeb.git
+   cd HospiTrackWeb
    \`\`\`
 
 2. Install dependencies:
@@ -60,13 +60,6 @@ A mobile-friendly web application that helps users find nearby hospitals with av
 2. Grant location access when prompted
 3. Browse nearby hospitals with available beds
 4. Book a bed or navigate to a hospital
-
-## Deployment
-
- Build the application:
-   \`\`\`
-   npm run build
-   \`\`\`
 
 ## License
 

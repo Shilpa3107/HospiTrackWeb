@@ -1,5 +1,6 @@
 "use client";
 
+import emailjs from "@emailjs/browser";
 import {
   Dialog,
   DialogActions,
@@ -33,6 +34,53 @@ import DirectionsIcon from "@mui/icons-material/Directions";
 import InfoIcon from "@mui/icons-material/Info";
 import "./HospitalCard.css";
 
+const sendBookingNotification = async (hospital, name, contact, email, bedType) => {
+  const bookingData = {
+    hospitalName: hospital.name,
+    hospitalContact: hospital.contact,
+    hospitalEmail: hospital.contact.email, 
+    patientName: name,
+    contactNumber: contact,
+    email,
+    bedType
+  };
+  console.log("Email: ",hospital.contact.email)
+  console.log("Phone: ",contact)
+
+  // Save booking data to localStorage
+  const existingBookings = JSON.parse(localStorage.getItem("bookings")) || [];
+  existingBookings.push(bookingData);
+  localStorage.setItem("bookings", JSON.stringify(existingBookings));
+
+  // EmailJS Integration
+  try {
+    const response = await emailjs.send(
+      "service_dxdrxk2", 
+      "template_58n828n",
+      {
+        title: `Booking request for a ${bedType} bed.`,
+        adminName: hospital.name, 
+        name: name, 
+        email: email,
+        message: `Booking request for a ${bedType} bed.`,
+        bed_type: bedType,
+        contact: contact,
+        hospital_name: hospital.name,
+        hospital_email: hospital.contact.email, 
+      },
+      "T1rN38m7Lfuc0FTOg" 
+    );
+
+    console.log('Email sent successfully:', response);
+    alert("Booking submitted and email sent successfully!");
+  } catch (error) {
+    console.error("EmailJS Error:", error);
+    alert("Booking submitted but failed to send email.");
+  }
+};
+
+
+
 const HospitalCard = ({ hospital }) => {
   const [view, setView] = useState("default");
   const [patientName, setPatientName] = useState("");
@@ -62,27 +110,6 @@ setContactNumber("");
 setEmail("");
 setBedType("");
 
-  };
-  
-
-  const sendBookingNotification = (hospital, name, contact, email, bedType) => {
-    const bookingData = {
-      hospitalName: hospital.name,
-      hospitalContact: hospital.contact,
-      hospitalEmail: hospital.email,
-      patientName: name,
-      contactNumber: contact,
-      email,
-      bedType
-    };
-
-    console.log("Booking Data:", bookingData);
-
-    const existingBookings = JSON.parse(localStorage.getItem("bookings")) || [];
-    existingBookings.push(bookingData);
-    localStorage.setItem("bookings", JSON.stringify(existingBookings));
-
-    alert("Booking submitted successfully!");
   };
 
   const handleCloseDialog = () => {

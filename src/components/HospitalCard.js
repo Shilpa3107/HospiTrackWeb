@@ -20,7 +20,10 @@ import {
   IconButton
 } from "@mui/material";
 import { useState } from "react";
+import React from "react";
 import { motion } from "framer-motion";
+import Snackbar from "@mui/material/Snackbar";
+import MuiAlert from "@mui/material/Alert";
 import { HospitalService } from "../services/hospitalService";
 import { useNavigate } from "react-router-dom";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
@@ -38,7 +41,12 @@ const HospitalCard = ({ hospital }) => {
   const [bedType, setBedType] = useState("");
   const [openDialog, setOpenDialog] = useState(false);
   const [bookingStatus, setBookingStatus] = useState(null);
+  const [openSnackbar, setOpenSnackbar] = useState(false);
   const navigate = useNavigate();
+
+  const Alert = React.forwardRef(function Alert(props, ref) {
+    return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+  });  
 
   const handleBookBed = () => {
     setOpenDialog(true);
@@ -48,7 +56,14 @@ const HospitalCard = ({ hospital }) => {
     sendBookingNotification(hospital, patientName, contactNumber, email, bedType);
     setBookingStatus("success");
     setOpenDialog(false);
+    setOpenSnackbar(true); 
+    setPatientName("");
+setContactNumber("");
+setEmail("");
+setBedType("");
+
   };
+  
 
   const sendBookingNotification = (hospital, name, contact, email, bedType) => {
     const bookingData = {
@@ -291,6 +306,17 @@ const HospitalCard = ({ hospital }) => {
           </Button>
         </DialogActions>
       </Dialog>
+      <Snackbar
+  open={openSnackbar}
+  autoHideDuration={4000}
+  onClose={() => setOpenSnackbar(false)}
+  anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+>
+  <Alert onClose={() => setOpenSnackbar(false)} severity="success" sx={{ width: "100%" }}>
+    Bed has been booked successfully!
+  </Alert>
+</Snackbar>
+
     </>
   );
 };

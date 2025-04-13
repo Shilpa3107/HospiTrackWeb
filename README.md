@@ -1,66 +1,126 @@
-# HospiTrack - Hospital Bed Availability Tracker
+#  HospiTrack – Hospital Bed Availability Tracker
 
-A mobile-friendly web application that helps users find nearby hospitals with available beds and navigate to them.
+**HospiTrack** is a mobile-responsive web application that enables users to find nearby hospitals with available beds and navigate to them using an interactive map.
 
-## Features
+---
 
-- Location-based hospital search
-- Real-time bed availability tracking
-- Facility information for each hospital
-- Bed booking functionality
-- Navigation with different transport options
-- Interactive maps using Leaflet
+##  Features
+
+- **Location-based Hospital Search**  
+  Detects the user's current location and shows nearby hospitals on the map.
+
+- **Real-time Bed Availability**  
+  View the availability of general, oxygen, and ICU beds updated in real-time.
+
+- **Hospital Facility Details**  
+  Each hospital displays contact info, address, and available facilities.
+
+- **Bed Booking Functionality**  
+  Users can fill in details and book beds directly through the app interface.
+
+- **Navigation Support**  
+  Provides navigation to selected hospitals using Leaflet with multiple transport modes.
+
+- **Interactive Maps with Leaflet**  
+  All location-based functionality is built using the Leaflet library.
+
+---
 
 ## Tech Stack
 
-- React for the frontend UI
-- Firebase Realtime database for the database
-- Leaflet for maps and navigation
-- React Router for routing
+| Technology        | Description                               |
+|------------------|-------------------------------------------|
+| **React**        | Frontend library for building UI          |
+| **Firebase**     | Realtime database for storing hospital data |
+| **Leaflet**      | Maps and location tracking                |
+| **React Router** | Handles routing between pages             |
 
-## Getting Started
+---
+
+## 🧑‍💻 Getting Started
 
 ### Prerequisites
 
-- Node.js (v14 or higher)
-- Firebase account
-- Firebase CLI
+- [Node.js](https://nodejs.org/en/) (version 14 or higher)
+- A [Firebase account](https://firebase.google.com/)
+- [Firebase CLI](https://firebase.google.com/docs/cli)
 
-### Installation
+---
 
-1. Clone the repository:
-   \`\`\`
+###  Installation
+
+1. **Clone the Repository**
+
+   ```bash
    git clone https://github.com/Shilpa3107/HospiTrackWeb.git
    cd HospiTrackWeb
-   \`\`\`
+   ```
+2. **Install Dependencies**
+   ```bash
+     npm install
+   ```
+3. **Set Up Firebase**
+   - Go to Firebase Console
+   - Create a new Firebase project
+   -  Enable Firestore Database
+   - Copy your Firebase config and replace it in src/firebase.js:
+  ```bash
+const firebaseConfig = {
+  apiKey: "YOUR_API_KEY",
+  authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
+  databaseURL: "https://YOUR_PROJECT_ID.firebaseio.com",
+  projectId: "YOUR_PROJECT_ID",
+  storageBucket: "YOUR_PROJECT_ID.appspot.com",
+  messagingSenderId: "SENDER_ID",
+  appId: "APP_ID"
+};
+```
+4. **Start Development Server**
+```bash
+npm start
+```
+Visit the site in your browser at:  ***http://localhost:3000***
 
-2. Install dependencies:
-   \`\`\`
-   npm install
-   \`\`\`
+###  How to Use
+- Open the app in a browser
+- Allow location access when prompted
+- View hospitals near your current location
+- Check available beds (General, ICU, Oxygen)
+- Click on a hospital to see detailed info
+- Use the Book Bed button to make a reservation
+- Use the Navigation option to get directions to the hospital
 
-3. Set up Firebase:
-   - Create a Firebase project in the Firebase Console
-   - Enable Firestore database
-   - Add your Firebase configuration to `src/firebase.js`
+### Project Structure
+```plaintext
+HospiTrackWeb/
+├── public/
+│   └── index.html
+├── src/
+│   ├── components/         # Reusable React components
+│   ├── pages/              # Main page components (Home, HospitalDetails, etc.)
+│   ├── scripts/            # Script to seed Firebase
+│   ├── firebase.js         # Firebase config
+│   ├── App.js              # Main application component
+│   └── index.js            # React entry point
+└── package.json
+```
 
-4. Seed the database with sample data:
-   \`\`\`
-   node src/scripts/seedDatabase.js
-   \`\`\`
+### License
+This project is licensed under the MIT License.
+See the LICENSE file for more details.
 
-5. Start the development server:
-   \`\`\`
-   npm start
-   \`\`\`
+### Acknowledgments
+- Leaflet.js for powerful open-source mapping
+-Firebase for real-time database support
+-React for the modern component-based frontend
 
-## Usage
+### Future Improvements
+- Admin panel for hospital staff to update bed availability
+- SMS/Email notifications for booking confirmations
+- Filters for hospitals based on services (ICU, Oxygen, Ventilators, etc.)
+- Responsive mobile-first design improvements
 
-1. Open the application in your browser
-2. Grant location access when prompted
-3. Browse nearby hospitals with available beds
-4. Book a bed or navigate to a hospital
 
-## License
 
-This project is licensed under the MIT License - see the LICENSE file for details.
+
+

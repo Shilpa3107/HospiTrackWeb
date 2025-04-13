@@ -5,6 +5,7 @@ import { useAuth } from "../../contexts/AuthContext"
 import { HospitalService } from "../../services/hospitalService"
 import HospitalForm from "./HospitalForm"
 import BedManagement from "./BedManagement"
+import HospitalMap from "./HospitalMap"
 import "./AdminDashboard.css"
 
 const AdminDashboard = () => {
@@ -67,6 +68,11 @@ const AdminDashboard = () => {
       {error && <div className="error-message">{error}</div>}
 
       <div className="admin-tabs">
+        {hospital && (
+          <button className={`tab-btn ${activeTab === "info" ? "active" : ""}`} onClick={() => setActiveTab("info")}>
+            Hospital Info
+          </button>
+        )}
         <button
           className={`tab-btn ${activeTab === "details" ? "active" : ""}`}
           onClick={() => setActiveTab("details")}
@@ -81,6 +87,60 @@ const AdminDashboard = () => {
       </div>
 
       <div className="admin-content">
+        {activeTab === "info" && hospital && (
+          <div className="hospital-info">
+            <div className="info-header">
+              <h2>Hospital Information</h2>
+              <button 
+                className="edit-btn"
+                onClick={() => setActiveTab("details")}
+              >
+                Edit Details
+              </button>
+            </div>
+            <div className="info-grid">
+              <div className="info-item">
+                <h3>Basic Details</h3>
+                <p><strong>Name:</strong> {hospital.name}</p>
+                <p><strong>Type:</strong> {hospital.type}</p>
+                <p><strong>Address:</strong> {hospital.address}</p>
+                <p><strong>Landmark:</strong> {hospital.landmark}</p>
+              </div>
+              <div className="info-item">
+                <h3>Contact Information</h3>
+                <p><strong>Phone:</strong> {hospital.contact.phone}</p>
+                <p><strong>Email:</strong> {hospital.contact.email}</p>
+                <p><strong>Emergency Contact:</strong> {hospital.contact.emergency}</p>
+              </div>
+
+              <div className="info-item">
+                <h3>Facilities</h3>
+                <ul>
+                  {hospital.facilities.map((facility, index) => (
+                    <li key={index}>{facility}</li>
+                  ))}
+                </ul>
+                <button 
+                  className="manage-beds-btn"
+                  onClick={() => setActiveTab("beds")}
+                >
+                  Manage Beds
+                </button>
+              </div>
+
+              <div className="info-item">
+                <h3>Location</h3>
+                <div className="map-container">
+                  <HospitalMap location={hospital.location} />
+                </div>
+                <div className="coordinates">
+                  <p><strong>Latitude:</strong> {hospital.location.latitude}</p>
+                  <p><strong>Longitude:</strong> {hospital.location.longitude}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
         {activeTab === "details" && (
           <HospitalForm 
             hospital={hospital} 

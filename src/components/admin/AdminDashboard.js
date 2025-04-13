@@ -92,12 +92,6 @@ const AdminDashboard = () => {
             <div className="info-header">
               <h2>Hospital Information</h2>
               <button 
-                  className="manage-beds-btn"
-                  onClick={() => setActiveTab("beds")}
-                >
-                  Manage Beds
-                </button>
-              <button 
                 className="edit-btn"
                 onClick={() => setActiveTab("details")}
               >
@@ -126,6 +120,12 @@ const AdminDashboard = () => {
                     <li key={index}>{facility}</li>
                   ))}
                 </ul>
+                <button 
+                  className="manage-beds-btn"
+                  onClick={() => setActiveTab("beds")}
+                >
+                  Manage Beds
+                </button>
               </div>
 
               <div className="info-item">

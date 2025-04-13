@@ -111,8 +111,8 @@ See the LICENSE file for more details.
 
 ### Acknowledgments
 - Leaflet.js for powerful open-source mapping
--Firebase for real-time database support
--React for the modern component-based frontend
+- Firebase for real-time database support
+- React for the modern component-based frontend
 
 ### Future Improvements
 - Admin panel for hospital staff to update bed availability
